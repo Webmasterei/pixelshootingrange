@@ -5,5 +5,29 @@ alwaysApply: true
 
 # Production Environment
 
+## Server (Shared Hetzner VM)
+
+- **SSH-Zugang:** `ssh root@<HETZNER_VM_IP>` (gleiche VM wie GA4 Auditor)
+- **Projektverzeichnis:** `/opt/pixelshootingrange/`
+- **Compose-File:** `/opt/pixelshootingrange/docker-compose.yml`
+- **systemd Unit:** `pixelshootingrange-compose.service`
+- **Caddy Site Config:** `/etc/caddy/sites-enabled/pixelshootingrange.caddy`
+- **App-Port:** `127.0.0.1:3000` (nur lokal, Caddy auf Host terminiert TLS)
+
+## Architektur
+
+- Host-Caddy routet `pixelshootingrange.de` -> `localhost:3000`
+- Docker Compose Stack: Flask/Gunicorn Container
+- Kein eigener Reverse-Proxy im Container (TLS via Host-Caddy)
+- Autonom vom GA4 Auditor (`/opt/ga4check/`)
+
+## CI/CD
+
+- GitHub Actions: Push auf `main` -> Build -> GHCR -> SSH Deploy
+- Image: `ghcr.io/webmasterei/pixelshootingrange:prod`
+- GitHub Secrets: `PROD_HOST`, `DEPLOY_SSH_KEY`
+
+## Legacy Server (alt, wird abgeschaltet)
+
 - **SSH-Zugang:** `ssh web-user@62.113.228.185`
 - **Projektverzeichnis:** `/var/www/share/development/pixelshootingrange_game`
