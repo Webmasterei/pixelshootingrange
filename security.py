@@ -6,30 +6,18 @@ CSP via Talisman, caching, and robots directives.
 
 from flask_talisman import Talisman
 
+# Permissive CSP: this app is a GTM/CMP testing tool where users load
+# arbitrary third-party scripts. Locking down to specific domains would
+# break the core functionality. We allow all HTTPS sources for the
+# categories that GTM, GA, and CMP providers need.
 CSP = {
-    'default-src': "'self'",
-    'script-src': [
-        "'self'",
-        "'unsafe-inline'",
-        "https://www.googletagmanager.com",
-        "https://www.google-analytics.com",
-        "https://tagassistant.google.com",
-    ],
-    'style-src': ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-    'font-src': ["'self'", "https://fonts.gstatic.com"],
-    'img-src': [
-        "'self'", "data:",
-        "https://www.googletagmanager.com",
-        "https://www.google-analytics.com",
-    ],
-    'connect-src': [
-        "'self'",
-        "https://www.google-analytics.com",
-        "https://www.googletagmanager.com",
-        "https://tagassistant.google.com",
-        "https://region1.google-analytics.com",
-    ],
-    'frame-src': ["https://www.googletagmanager.com"],
+    'default-src': ["'self'", "https:"],
+    'script-src': ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https:", "blob:"],
+    'style-src': ["'self'", "'unsafe-inline'", "https:"],
+    'font-src': ["'self'", "https:", "data:"],
+    'img-src': ["'self'", "https:", "data:"],
+    'connect-src': ["'self'", "https:"],
+    'frame-src': ["'self'", "https:"],
 }
 
 CACHE_SECONDS = {
