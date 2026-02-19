@@ -1,0 +1,9 @@
+---
+description: Production environment connection details and deployment info
+alwaysApply: true
+---
+
+# Production Environment
+
+- **SSH-Zugang:** `ssh web-user@62.113.228.185`
+- **Projektverzeichnis:** `/var/www/share/development/pixelshootingrange_game`

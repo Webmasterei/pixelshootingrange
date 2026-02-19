@@ -1,0 +1,23 @@
+{
+  "name": "ga4-session-simulator",
+  "version": "1.0.0",
+  "description": "Playwright-based GA4 session simulator for Pixel Shooting Range",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "start:once": "node src/index.js --once",
+    "start:debug": "node src/index.js --debug"
+  },
+  "keywords": [
+    "ga4",
+    "analytics",
+    "playwright",
+    "testing"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "playwright": "^1.41.0"
+  }
+}

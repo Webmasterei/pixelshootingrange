@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Shooting Range - GA4 E-Commerce Event Tester</title>
+    <!-- SNIPPET:HEAD -->
+    <script>
+        (function() {
+            var fakeReferrer = sessionStorage.getItem('psr_fake_referrer');
+            if (fakeReferrer) {
+                sessionStorage.removeItem('psr_fake_referrer');
+                Object.defineProperty(document, 'referrer', {
+                    get: function() { return fakeReferrer; }
+                });
+                console.log('%c[Referrer Override] document.referrer = ' + fakeReferrer, 'color: #e91e63; font-weight: bold;');
+            }
+        })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rye&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- SNIPPET:BODY -->
+    <div class="scene-container" id="scene">
+        <button class="sign-btn" data-event="page_view">
+            <span class="sign-emoji">📄</span>
+            <span class="sign-label">page_view</span>
+        </button>
+        <button class="sign-btn" data-event="view_item_list">
+            <span class="sign-emoji">📋</span>
+            <span class="sign-label">view_item_list</span>
+        </button>
+        <button class="sign-btn" data-event="view_item">
+            <span class="sign-emoji">🔍</span>
+            <span class="sign-label">view_item</span>
+        </button>
+        <button class="sign-btn" data-event="select_item">
+            <span class="sign-emoji">👆</span>
+            <span class="sign-label">select_item</span>
+        </button>
+        <button class="sign-btn" data-event="add_to_cart">
+            <span class="sign-emoji">🛒</span>
+            <span class="sign-label">add_to_cart</span>
+        </button>
+        <button class="sign-btn" data-event="remove_from_cart">
+            <span class="sign-emoji">❌</span>
+            <span class="sign-label">remove_from_cart</span>
+        </button>
+        <button class="sign-btn" data-event="begin_checkout">
+            <span class="sign-emoji">🛍️</span>
+            <span class="sign-label">begin_checkout</span>
+        </button>
+        <button class="sign-btn" data-event="add_shipping_info">
+            <span class="sign-emoji">🚚</span>
+            <span class="sign-label">add_shipping_info</span>
+        </button>
+        <button class="sign-btn" data-event="add_payment_info">
+            <span class="sign-emoji">💳</span>
+            <span class="sign-label">add_payment_info</span>
+        </button>
+        <button class="sign-btn" data-event="purchase">
+            <span class="sign-emoji">💰</span>
+            <span class="sign-label">purchase</span>
+        </button>
+        <button class="sign-btn sign-btn-special" data-event="purchase_payment_provider">
+            <span class="sign-emoji">💳</span>
+            <span class="sign-label">purchase payment_provider</span>
+        </button>
+    </div>
+
+    <button class="sound-btn" id="soundBtn" title="Sound ein/aus">🔊</button>
+
+    <button class="config-btn" id="configBtn" title="GTM/CMP Konfiguration">
+        <span class="config-icon">⚙</span>
+        <span class="config-status" id="configStatus"></span>
+    </button>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <h2 class="modal-title">GTM / CMP Konfiguration</h2>
+            <div class="modal-field">
+                <label for="gtmSnippet">Google Tag Manager Snippet:</label>
+                <textarea id="gtmSnippet" placeholder="Füge hier deinen GTM Container-Snippet ein..."></textarea>
+            </div>
+            <div class="modal-field">
+                <label for="cmpSnippet">CMP Snippet (optional):</label>
+                <textarea id="cmpSnippet" placeholder="Füge hier deinen Consent Management Platform Snippet ein..."></textarea>
+            </div>
+            <div class="modal-field modal-field-toggle">
+                <label class="toggle-label" for="spaToggle">
+                    <span class="toggle-text">Single Page Application (SPA) Modus</span>
+                    <span class="toggle-hint">Wenn aktiv, werden alle Events ohne Page Reload gefeuert</span>
+                </label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="spaToggle">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn btn-apply" id="btnApply">Anwenden</button>
+                <button class="modal-btn btn-clear" id="btnClear">Löschen</button>
+                <button class="modal-btn btn-close" id="btnClose">Schließen</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <img id="pistol" class="pistol" src="images/pistol.png" alt="" draggable="false">
+
+    <div id="crosshair" class="crosshair">
+        <svg viewBox="0 0 40 40" width="40" height="40">
+            <circle cx="20" cy="20" r="12" fill="none" stroke="currentColor" stroke-width="1.5"/>
+            <line x1="20" y1="4" x2="20" y2="14" stroke="currentColor" stroke-width="1.5"/>
+            <line x1="20" y1="26" x2="20" y2="36" stroke="currentColor" stroke-width="1.5"/>
+            <line x1="4" y1="20" x2="14" y2="20" stroke="currentColor" stroke-width="1.5"/>
+            <line x1="26" y1="20" x2="36" y2="20" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="20" cy="20" r="2" fill="currentColor"/>
+        </svg>
+    </div>
+
+    <script src="js/constants.js"></script>
+    <script src="js/datalayer-events.js"></script>
+    <script src="js/page-reload-handler.js"></script>
+    <script src="js/config-panel.js"></script>
+    <script src="js/sound.js"></script>
+    <script src="js/gun-controller.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

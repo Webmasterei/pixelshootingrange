@@ -1,0 +1,70 @@
+{
+  "targetUrl": "https://pixelshootingrange.de",
+  "gtmSnippet": "",
+  "cmpSnippet": "",
+  "sessions": {
+    "intervalSeconds": 5,
+    "maxConcurrent": 3,
+    "totalSessions": 0
+  },
+  "funnel": {
+    "bounceRate": 0.30,
+    "browseRate": 0.30,
+    "cartAbandonRate": 0.20,
+    "checkoutAbandonRate": 0.12,
+    "purchaseRate": 0.08
+  },
+  "users": {
+    "returningUserRate": 0.35,
+    "maxPoolSize": 200
+  },
+  "timing": {
+    "minEventDelayMs": 1500,
+    "maxEventDelayMs": 12000,
+    "pageLoadWaitMs": 3000
+  },
+  "trafficSources": [
+    {
+      "name": "organic_google",
+      "weight": 0.40,
+      "source": "google",
+      "medium": "organic",
+      "referrer": "https://www.google.com/"
+    },
+    {
+      "name": "paid_search",
+      "weight": 0.20,
+      "source": "google",
+      "medium": "cpc",
+      "campaign": "brand_2026"
+    },
+    {
+      "name": "social_instagram",
+      "weight": 0.15,
+      "source": "instagram",
+      "medium": "social",
+      "referrer": "https://www.instagram.com/"
+    },
+    {
+      "name": "direct",
+      "weight": 0.10,
+      "source": "(direct)",
+      "medium": "(none)",
+      "referrer": ""
+    },
+    {
+      "name": "referral",
+      "weight": 0.10,
+      "source": "partner-blog.de",
+      "medium": "referral",
+      "referrer": "https://partner-blog.de/artikel"
+    },
+    {
+      "name": "email",
+      "weight": 0.05,
+      "source": "newsletter",
+      "medium": "email",
+      "campaign": "feb_2026"
+    }
+  ]
+}
