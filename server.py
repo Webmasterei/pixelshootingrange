@@ -6,6 +6,7 @@ Stateless server that injects GTM/CMP snippets into HTML based on session cookie
 import os
 import re
 from flask import Flask, request, session, jsonify, send_from_directory
+from security import init_security, ROBOTS_TXT
 
 app = Flask(__name__, static_folder=None)
 
@@ -20,31 +21,7 @@ if os.environ.get('FLASK_ENV') == 'production':
     from werkzeug.middleware.proxy_fix import ProxyFix
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 
-if os.environ.get('FORCE_HTTPS') == 'true':
-    from flask_talisman import Talisman
-    
-    csp = {
-        'default-src': "'self'",
-        'script-src': [
-            "'self'",
-            "'unsafe-inline'",
-            "https://www.googletagmanager.com",
-            "https://www.google-analytics.com",
-            "https://tagassistant.google.com",
-        ],
-        'style-src': ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-        'font-src': ["'self'", "https://fonts.gstatic.com"],
-        'img-src': ["'self'", "data:", "https://www.googletagmanager.com", "https://www.google-analytics.com"],
-        'connect-src': [
-            "'self'",
-            "https://www.google-analytics.com",
-            "https://www.googletagmanager.com",
-            "https://tagassistant.google.com",
-            "https://region1.google-analytics.com",
-        ],
-        'frame-src': ["https://www.googletagmanager.com"],
-    }
-    Talisman(app, content_security_policy=csp, force_https=True)
+init_security(app)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -191,10 +168,21 @@ def serve_images(filename):
     return send_from_directory(os.path.join(BASE_DIR, 'images'), filename)
 
 
+@app.route('/robots.txt')
+def robots():
+    """Block all search engine crawlers."""
+    return ROBOTS_TXT, 200, {'Content-Type': 'text/plain; charset=utf-8'}
+
+
 @app.route('/health')
 def health():
     """Health check endpoint for container orchestration."""
     return jsonify({'status': 'healthy'}), 200
+
+
+@app.errorhandler(404)
+def not_found(_error):
+    return jsonify({'error': 'not found'}), 404
 
 
 if __name__ == '__main__':
