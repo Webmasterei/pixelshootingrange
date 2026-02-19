@@ -1,3 +1,8 @@
+# PRODUCTION - Local Build
+# Usage: docker compose up -d --build
+# Port: 3000
+# Note: Changes require rebuild (docker compose up -d --build)
+
 services:
   pixelshootingrange:
     build: .

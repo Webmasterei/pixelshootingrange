@@ -1,0 +1,45 @@
+# DEVELOPMENT - Hot-Reload enabled
+# Usage: docker compose -f docker-compose.dev.yml up
+# Port: 3001
+# Note: File changes trigger automatic reload (Python + static files)
+
+services:
+  pixelshootingrange-dev:
+    build: .
+    container_name: pixelshootingrange-dev
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      - SESSION_SECRET=${SESSION_SECRET:-dev-secret-for-local}
+      - FLASK_APP=server.py
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1
+    volumes:
+      # Static files (Frontend)
+      - ./index.html:/app/index.html:ro
+      - ./payment-provider.html:/app/payment-provider.html:ro
+      - ./css:/app/css:ro
+      - ./js:/app/js:ro
+      - ./images:/app/images:ro
+      # Python files (Backend) - Hot-reload triggers on change
+      - ./server.py:/app/server.py:ro
+      - ./security.py:/app/security.py:ro
+      - ./simulator_api.py:/app/simulator_api.py:ro
+      - ./bot_protection.py:/app/bot_protection.py:ro
+      - ./simulator_py:/app/simulator_py
+    command: ["python", "-m", "flask", "run", "--host=0.0.0.0", "--port=3000", "--reload"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+

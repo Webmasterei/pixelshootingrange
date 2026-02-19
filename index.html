@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
     <title>Pixel Shooting Range - GA4 E-Commerce Event Tester</title>
+    <script>
+        (function() {
+            window.dataLayer = window.dataLayer || [];
+            var beforeConsent = sessionStorage.getItem('psr_ecommerce_before_consent') !== 'false';
+            if (!beforeConsent) return;
+
+            var payload = sessionStorage.getItem('psr_pending_ecommerce_payload');
+            if (!payload) return;
+
+            try {
+                var data = JSON.parse(payload);
+                window.dataLayer.push(data);
+                sessionStorage.removeItem('psr_pending_ecommerce_payload');
+                sessionStorage.setItem('psr_ecommerce_early_fired', 'true');
+                console.log('%c[Early DataLayer Push] vor CMP/GTM', 'color: #ff9800; font-weight: bold;', data);
+            } catch(e) {}
+        })();
+    </script>
     <!-- SNIPPET:HEAD -->
     <script>
         (function() {
@@ -72,12 +90,17 @@
         </button>
     </div>
 
-    <button class="sound-btn" id="soundBtn" title="Sound ein/aus">🔊</button>
-
-    <button class="config-btn" id="configBtn" title="GTM/CMP Konfiguration">
-        <span class="config-icon">⚙</span>
-        <span class="config-status" id="configStatus"></span>
-    </button>
+    <div class="toolbar-right">
+        <button class="toolbar-btn config-btn" id="configBtn" title="GTM/CMP Konfiguration">
+            <span class="config-icon">⚙</span>
+            <span class="config-status" id="configStatus"></span>
+        </button>
+        <button class="toolbar-btn simulator-btn" id="simulatorBtn" title="Traffic Simulator">
+            <span class="simulator-icon">🤖</span>
+        </button>
+        <button class="toolbar-btn sound-btn" id="soundBtn" title="Sound ein/aus">🔊</button>
+        <button class="toolbar-btn session-btn" id="sessionBtn" title="Neue GA4 Session">🔄</button>
+    </div>
 
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
@@ -100,10 +123,46 @@
                     <span class="toggle-slider"></span>
                 </label>
             </div>
+            <div class="modal-field modal-field-toggle">
+                <label class="toggle-label" for="consentTimingToggle">
+                    <span class="toggle-text">E-Commerce DataLayer vor Einwilligung</span>
+                    <span class="toggle-hint">Wenn aktiv, erscheinen E-Commerce Events im DataLayer bevor CMP/GTM laden (Shop-typisch)</span>
+                </label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="consentTimingToggle" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
             <div class="modal-actions">
                 <button class="modal-btn btn-apply" id="btnApply">Anwenden</button>
                 <button class="modal-btn btn-clear" id="btnClear">Löschen</button>
                 <button class="modal-btn btn-close" id="btnClose">Schließen</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="simModalOverlay">
+        <div class="modal sim-modal">
+            <h2 class="modal-title">Traffic Simulator</h2>
+            <p class="sim-description">
+                Startet automatische Browser-Sessions, die GA4 E-Commerce Events simulieren.
+                Die konfigurierten GTM/CMP Snippets werden verwendet.
+            </p>
+            <div class="modal-field">
+                <label for="simSessions">Anzahl Sessions (1-50):</label>
+                <input type="number" id="simSessions" min="1" max="50" value="10">
+            </div>
+            <div class="sim-progress-container" id="simProgressContainer" style="display: none;">
+                <div class="sim-progress-bar-bg">
+                    <div class="sim-progress-bar" id="simProgressBar"></div>
+                </div>
+                <div class="sim-progress-text" id="simProgressText"></div>
+            </div>
+            <div class="sim-status" id="simStatusText"></div>
+            <div class="modal-actions">
+                <button class="modal-btn btn-apply" id="simStartBtn">Starten</button>
+                <button class="modal-btn btn-clear" id="simStopBtn" disabled>Stoppen</button>
+                <button class="modal-btn btn-close" id="simCloseBtn">Schließen</button>
             </div>
         </div>
     </div>
@@ -127,7 +186,9 @@
     <script src="js/datalayer-events.js"></script>
     <script src="js/page-reload-handler.js"></script>
     <script src="js/config-panel.js"></script>
+    <script src="js/simulator-panel.js"></script>
     <script src="js/sound.js"></script>
+    <script src="js/session-manager.js"></script>
     <script src="js/gun-controller.js"></script>
     <script src="js/app.js"></script>
 </body>

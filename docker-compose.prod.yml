@@ -1,3 +1,8 @@
+# PRODUCTION - Remote Image (GitHub Container Registry)
+# Usage: docker compose -f docker-compose.prod.yml up -d
+# Port: 3000 (localhost only)
+# Note: Uses pre-built image from ghcr.io
+
 services:
   app:
     image: ghcr.io/webmasterei/pixelshootingrange:prod

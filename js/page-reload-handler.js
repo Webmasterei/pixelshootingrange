@@ -24,7 +24,20 @@ const PageReloadHandler = {
     schedulePaymentProviderRedirect() {
         sessionStorage.setItem(STORAGE_KEYS.PENDING_EVENT, 'purchase');
         sessionStorage.setItem(STORAGE_KEYS.FAKE_REFERRER, FAKE_PAYMENT_PROVIDER_URL);
+        
+        this._storePayloadIfBeforeConsent('purchase');
+        
         window.location.href = 'payment-provider.html';
+    },
+
+    _storePayloadIfBeforeConsent(eventName) {
+        const isBeforeConsent = sessionStorage.getItem(STORAGE_KEYS.ECOMMERCE_BEFORE_CONSENT) !== 'false';
+        if (!isBeforeConsent) return;
+
+        const payload = DataLayerEvents.buildEventData(eventName);
+        if (payload) {
+            sessionStorage.setItem(STORAGE_KEYS.ECOMMERCE_PAYLOAD, JSON.stringify(payload));
+        }
     },
 
     checkPendingEvent() {

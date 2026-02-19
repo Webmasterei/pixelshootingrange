@@ -5,8 +5,15 @@ Stateless server that injects GTM/CMP snippets into HTML based on session cookie
 
 import os
 import re
+import logging
 from flask import Flask, request, session, jsonify, send_from_directory
 from security import init_security, ROBOTS_TXT
+from simulator_api import simulator_bp
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 
 app = Flask(__name__, static_folder=None)
 
@@ -22,6 +29,8 @@ if os.environ.get('FLASK_ENV') == 'production':
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 
 init_security(app)
+
+app.register_blueprint(simulator_bp)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -74,9 +83,13 @@ def parse_cmp_snippet(snippet):
 
 
 def inject_snippets(html_content):
-    """Inject session snippets into HTML at marker positions."""
-    gtm_snippet = session.get('gtm_snippet', '')
-    cmp_snippet = session.get('cmp_snippet', '')
+    """Inject session snippets into HTML at marker positions.
+    
+    Snippets come from session OR from query params (for simulator).
+    Query params take precedence if present.
+    """
+    gtm_snippet = request.args.get('_gtm') or session.get('gtm_snippet', '')
+    cmp_snippet = request.args.get('_cmp') or session.get('cmp_snippet', '')
     
     gtm_script, gtm_noscript = parse_gtm_snippet(gtm_snippet)
     cmp_script = parse_cmp_snippet(cmp_snippet)

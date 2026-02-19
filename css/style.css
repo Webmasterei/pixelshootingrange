@@ -115,11 +115,20 @@ body {
     filter: hue-rotate(180deg) saturate(1.2) drop-shadow(0 0 12px rgba(100, 200, 255, 0.7));
 }
 
-/* Sound Toggle Button */
-.sound-btn {
+/* Toolbar Right Container */
+.toolbar-right {
     position: fixed;
-    bottom: 15px;
-    left: 15px;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    gap: 10px;
+    z-index: 100;
+    align-items: center;
+}
+
+/* Base Toolbar Button Style */
+.toolbar-btn {
+    position: relative;
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -131,41 +140,22 @@ body {
     align-items: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     transition: transform 0.2s, box-shadow 0.2s;
-    z-index: 100;
     font-size: 1.6rem;
 }
 
-.sound-btn:hover {
+.toolbar-btn:hover {
     transform: scale(1.1);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
 }
 
+/* Sound Button */
 .sound-btn.muted {
     opacity: 0.6;
 }
 
 /* Config Button */
 .config-btn {
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: linear-gradient(145deg, #8b7355, #5c4d3d);
-    border: 3px solid #3a2a1a;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    transition: transform 0.2s, box-shadow 0.2s;
-    z-index: 100;
-}
-
-.config-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+    position: relative;
 }
 
 .config-icon {
@@ -189,6 +179,22 @@ body {
 .config-status.active {
     background-color: #4caf50;
     box-shadow: 0 0 8px rgba(76, 175, 80, 0.8);
+}
+
+/* Simulator Button */
+.simulator-btn {
+    background: linear-gradient(145deg, #5c7a8f, #3d5a6b);
+    border-color: #2a3f4d;
+}
+
+.simulator-icon {
+    font-size: 1.6rem;
+}
+
+/* Session Reset Button */
+.session-btn {
+    background: linear-gradient(145deg, #8f6b5c, #6b4a3d);
+    border-color: #4d2a2a;
 }
 
 /* Modal */
@@ -435,4 +441,89 @@ body {
 
 .crosshair.crosshair-target {
     color: #ff3333;
+}
+
+/* Simulator Modal */
+.sim-modal {
+    max-width: 480px;
+}
+
+.sim-description {
+    font-family: sans-serif;
+    font-size: 0.85rem;
+    color: #555;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.sim-modal input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    font-family: 'Rye', cursive;
+    font-size: 1rem;
+    background-color: #f5f0e6;
+    border: 3px solid #8b7355;
+    border-radius: 6px;
+}
+
+.sim-modal input[type="number"]:focus {
+    outline: none;
+    border-color: #5c4d3d;
+    box-shadow: 0 0 8px rgba(92, 77, 61, 0.4);
+}
+
+.sim-progress-container {
+    margin: 20px 0;
+}
+
+.sim-progress-bar-bg {
+    width: 100%;
+    height: 24px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    border: 2px solid #8b7355;
+    overflow: hidden;
+}
+
+.sim-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #6b8f5c, #8fb86b);
+    border-radius: 10px;
+    transition: width 0.3s ease-out;
+}
+
+.sim-progress-text {
+    font-family: sans-serif;
+    font-size: 0.8rem;
+    color: #555;
+    text-align: center;
+    margin-top: 8px;
+}
+
+.sim-status {
+    font-family: sans-serif;
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 8px;
+    min-height: 24px;
+}
+
+.sim-status-info {
+    color: #5c7a8f;
+}
+
+.sim-status-success {
+    color: #4a6b3d;
+}
+
+.sim-status-error {
+    color: #8b3d3d;
+}
+
+.modal-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
 }

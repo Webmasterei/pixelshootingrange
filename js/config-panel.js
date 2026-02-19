@@ -22,6 +22,7 @@ const ConfigPanel = {
             gtmSnippet: document.getElementById('gtmSnippet'),
             cmpSnippet: document.getElementById('cmpSnippet'),
             spaToggle: document.getElementById('spaToggle'),
+            consentTimingToggle: document.getElementById('consentTimingToggle'),
             btnApply: document.getElementById('btnApply'),
             btnClear: document.getElementById('btnClear'),
             btnClose: document.getElementById('btnClose')
@@ -41,6 +42,10 @@ const ConfigPanel = {
 
         if (this.elements.spaToggle) {
             this.elements.spaToggle.addEventListener('change', () => this.toggleSPAMode());
+        }
+
+        if (this.elements.consentTimingToggle) {
+            this.elements.consentTimingToggle.addEventListener('change', () => this.toggleConsentTiming());
         }
 
         document.addEventListener('keydown', (e) => {
@@ -65,6 +70,10 @@ const ConfigPanel = {
         
         if (this.elements.spaToggle) {
             this.elements.spaToggle.checked = this.isSPAMode();
+        }
+
+        if (this.elements.consentTimingToggle) {
+            this.elements.consentTimingToggle.checked = this.isEcommerceBeforeConsent();
         }
         
         this.elements.modalOverlay.classList.add('visible');
@@ -158,6 +167,25 @@ const ConfigPanel = {
         if (typeof App !== 'undefined' && App.showToast) {
             const status = isEnabled ? 'aktiviert' : 'deaktiviert';
             App.showToast(`SPA-Modus ${status}`);
+        }
+    },
+
+    isEcommerceBeforeConsent() {
+        return sessionStorage.getItem(STORAGE_KEYS.ECOMMERCE_BEFORE_CONSENT) !== 'false';
+    },
+
+    toggleConsentTiming() {
+        const isEnabled = this.elements.consentTimingToggle.checked;
+        
+        if (isEnabled) {
+            sessionStorage.removeItem(STORAGE_KEYS.ECOMMERCE_BEFORE_CONSENT);
+        } else {
+            sessionStorage.setItem(STORAGE_KEYS.ECOMMERCE_BEFORE_CONSENT, 'false');
+        }
+
+        if (typeof App !== 'undefined' && App.showToast) {
+            const mode = isEnabled ? 'vor' : 'nach';
+            App.showToast(`E-Commerce Events ${mode} Einwilligung`);
         }
     }
 };

@@ -18,8 +18,9 @@ const STORAGE_KEYS = {
     FAKE_REFERRER: 'psr_fake_referrer',
     SPA_MODE: 'psr_spa_mode',
     SOUND_MUTED: 'psr_sound_muted',
-    GTM_SNIPPET: 'psr_gtm_snippet',
-    CMP_SNIPPET: 'psr_cmp_snippet'
+    ECOMMERCE_BEFORE_CONSENT: 'psr_ecommerce_before_consent',
+    ECOMMERCE_PAYLOAD: 'psr_pending_ecommerce_payload',
+    ECOMMERCE_EARLY_FIRED: 'psr_ecommerce_early_fired'
 };
 
 const FAKE_PAYMENT_PROVIDER_URL = 'https://checkout.stripe.com/pay/cs_test_' + 

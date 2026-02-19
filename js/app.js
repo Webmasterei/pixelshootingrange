@@ -21,6 +21,16 @@ const App = {
     },
 
     processPendingEvent() {
+        if (sessionStorage.getItem(STORAGE_KEYS.ECOMMERCE_EARLY_FIRED)) {
+            sessionStorage.removeItem(STORAGE_KEYS.ECOMMERCE_EARLY_FIRED);
+            const pendingEvent = PageReloadHandler.checkPendingEvent();
+            if (pendingEvent) {
+                this.showToast(`dataLayer push: ${pendingEvent} (vor Einwilligung)`);
+                console.log('%c[Page Reload] Event fired early (before consent)', 'color: #ff9800;');
+            }
+            return;
+        }
+
         const pendingEvent = PageReloadHandler.checkPendingEvent();
         
         if (pendingEvent) {
@@ -38,7 +48,8 @@ const App = {
         this.elements = {
             signs: document.querySelectorAll('.sign-btn'),
             toastContainer: document.getElementById('toastContainer'),
-            soundBtn: document.getElementById('soundBtn')
+            soundBtn: document.getElementById('soundBtn'),
+            sessionBtn: document.getElementById('sessionBtn')
         };
     },
 
@@ -48,6 +59,17 @@ const App = {
         });
         
         this.elements.soundBtn.addEventListener('click', () => this.toggleSound());
+        
+        if (this.elements.sessionBtn) {
+            this.elements.sessionBtn.addEventListener('click', () => this.resetSession());
+        }
+    },
+
+    resetSession() {
+        this.showToast('GA4 Session wird zurückgesetzt...');
+        setTimeout(() => {
+            SessionManager.resetGA4Session();
+        }, 300);
     },
 
     restoreSoundState() {
@@ -85,6 +107,7 @@ const App = {
         if (PageReloadHandler.shouldReload(eventName)) {
             this.showToast(`Page Reload: ${eventName}`);
             setTimeout(() => {
+                this._storeEcommercePayloadIfNeeded(eventName);
                 PageReloadHandler.scheduleEventAfterReload(eventName);
             }, 300);
             return;
@@ -117,6 +140,16 @@ const App = {
         setTimeout(() => {
             toast.remove();
         }, 2000);
+    },
+
+    _storeEcommercePayloadIfNeeded(eventName) {
+        const isBeforeConsent = sessionStorage.getItem(STORAGE_KEYS.ECOMMERCE_BEFORE_CONSENT) !== 'false';
+        if (!isBeforeConsent) return;
+
+        const payload = DataLayerEvents.buildEventData(eventName);
+        if (payload) {
+            sessionStorage.setItem(STORAGE_KEYS.ECOMMERCE_PAYLOAD, JSON.stringify(payload));
+        }
     }
 };
 
